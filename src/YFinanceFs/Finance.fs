@@ -6,7 +6,7 @@ open Chiron.Operators
 open HttpClient
 
 module Option =
-    let fromSingletonList xs =
+    let internal fromSingletonList xs =
         match xs with
         | [x] -> Some x
         | _ -> None
