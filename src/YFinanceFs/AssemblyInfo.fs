@@ -1,4 +1,4 @@
-﻿namespace YFinanceFS.AssemblyInfo
+﻿namespace YFinanceFs.AssemblyInfo
 
 open System.Reflection
 open System.Runtime.CompilerServices
