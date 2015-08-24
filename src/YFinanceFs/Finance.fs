@@ -74,7 +74,7 @@ let runRequest yql =
         return body
     }
 
-let private generateYQLQuery xs =
+let generateYQLQuery xs =
     let quoteString s = sprintf "\"%s\"" s
     let addComma s1 s2 = sprintf "%s,%s" s1 s2
     let stocks = xs |> (List.map (quoteString) >> List.reduce (addComma))

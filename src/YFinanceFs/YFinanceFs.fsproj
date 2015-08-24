@@ -108,7 +108,6 @@
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
     <Compile Include="Finance.fs" />
-    <None Include="TestLib.fsx" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="mscorlib" />
