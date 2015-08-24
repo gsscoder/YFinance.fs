@@ -6,7 +6,7 @@ open Chiron.Operators
 open HttpClient
 
 module Option =
-    let internal fromSingletonList xs =
+    let fromSingletonList xs =
         match xs with
         | [x] -> Some x
         | _ -> None
@@ -43,7 +43,7 @@ type StockQuote =
             <*> Json.read "YearHigh"
             <*> Json.read "YearLow"
 
-let private parseResponse json =
+let parseResponse json =
     match Json.parse json with
     | Object values ->
       match values |> Map.find "query" with
@@ -61,7 +61,7 @@ let private parseResponse json =
       | _ -> []
     | _ -> []
 
-let private runRequest yql =
+let runRequest yql =
     let request = 
         let yahoo = "https://query.yahooapis.com/v1/public/yql"
         let datatable = "store://datatables.org/alltableswithkeys"
@@ -82,7 +82,7 @@ let private generateYQLQuery xs =
 
 /// Fetch a stock quote from Yahoo Finance eg. getStockQuote "GOOGL".
 /// Asynchronous version.
-let private getStockQuoteAsync symbol =
+let getStockQuoteAsync symbol =
     async {
         let! response = generateYQLQuery [symbol] |> runRequest
         let xs = parseResponse response
