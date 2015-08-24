@@ -1,6 +1,11 @@
 # YFinance.fs
 F# library for querying real time stock market data including indexes such as NASDAQ and the S&P500.
 ```fsharp
+> #load @"../Your/Path/To/YFinance.fs/src/YFinanceFs/YFinanceFs.fsx";;
+[Loading YFinanceFs.fsx]
+
+namespace FSI_0004
+
 > open Network.Yahoo.Finance;;
 > getStockQuotes ["GOOGL";"YHOO"];;
 val it : StockQuote list = [{name = "Google Inc.";
