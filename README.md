@@ -18,15 +18,15 @@ val it : StockQuote list = [{name = "Google Inc.";
                                                     dayLow = "29.00";
                                                     yearHigh = "52.62";
                                                     yearLow = "29.00";}]
-> getStockQuotes ["MSFT"];;
-val it : StockQuote list = [{name = "Microsoft Corporation";
-                             symbol = "MSFT";
-                             price = "40.88";
-                             change = "-2.19";
-                             dayHigh = "41.00";
-                             dayLow = "39.72";
-                             yearHigh = "50.05";
-                             yearLow = "39.72";}]
+> getStockQuote "MSFT";;
+val it : StockQuote option = Some {name = "Microsoft Corporation";
+                                   symbol = "MSFT";
+                                   price = "41.895";
+                                   change = "-1.175";
+                                   dayHigh = "41.910";
+                                   dayLow = "39.720";
+                                   yearHigh = "50.050";
+                                   yearLow = "39.720";}
 > nasdaqIndex();;
 val it : StockQuote option = Some {name = "NASDAQ-100";
                                    symbol = "^NDX";
