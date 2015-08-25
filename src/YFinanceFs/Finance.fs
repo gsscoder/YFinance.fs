@@ -3,6 +3,8 @@
 open System
 open Chiron
 open Chiron.Operators
+open Aether
+open Aether.Operators
 open HttpClient
 
 module Option =
@@ -44,21 +46,23 @@ type StockQuote =
             <*> Json.read "YearLow"
 
 let parseResponse json =
-    match Json.parse json with
-    | Object values ->
-      match values |> Map.find "query" with
-      | Object values ->
-        match values |> Map.find "results" with
-        | Object values -> 
-          let node = values |> Map.find "quote"
-          match node with
-          | Array quotes ->
+    let (plens, _) =
+        idLens
+        <-?> Json.ObjectPIso
+        >??> mapPLens "query"
+        <??> Json.ObjectPIso
+        >??> mapPLens "results"
+        <??> Json.ObjectPIso
+    let node = plens (Json.parse json)
+    match node with
+    | Some values -> 
+        let data = values |> Map.find "quote"
+        match data with
+        | Array quotes ->
             quotes |> List.map (Json.deserialize : _ -> StockQuote)
-          | Object _ ->
-            [Json.deserialize node]
-          | _ -> []
+        | Object _ ->
+            [Json.deserialize data]
         | _ -> []
-      | _ -> []
     | _ -> []
 
 let runRequest yql =
