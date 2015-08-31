@@ -15,7 +15,9 @@ module Option =
         | [x] -> Some x
         | _ -> None
 
-let parseResponse json =
+let mapStockQuote = (Json.deserialize : _ -> StockQuote)
+
+let parseResponse json mapper =
     let (plens, _) =
         idLens
         <-?> Json.ObjectPIso
@@ -29,7 +31,7 @@ let parseResponse json =
         let data = values |> Map.find "quote"
         match data with
         | Array quotes ->
-            quotes |> List.map (Json.deserialize : _ -> StockQuote)
+            quotes |> List.map mapper
         | Object _ ->
             [Json.deserialize data]
         | _ -> []
@@ -60,7 +62,7 @@ let generateYQLQuery xs =
 let getStockQuoteAsync symbol =
     async {
         let! response = generateYQLQuery [symbol] |> runRequest
-        let xs = parseResponse response
+        let xs = parseResponse response mapStockQuote
         return xs |> Option.fromSingletonList
     }
 
@@ -72,7 +74,7 @@ let getStockQuotesAsync symbols =
         | [] -> return []
         | _ ->
             let! response = generateYQLQuery symbols |> runRequest
-            return parseResponse response
+            return parseResponse response mapStockQuote
     }
 
 /// Fetch a stock quote from Yahoo Finance eg. getStockQuote "GOOGL".
@@ -95,6 +97,13 @@ let historicalYQLQuery stock startDate endDate =
         ] |> List.reduce (+)
     in
         interpolate query [("x", quoteString stock); ("y", quoteString startDate); ("z", quoteString endDate)]
+
+/// Get historical prices for one or many stocks.
+/// Dates should be in the form YYYY-MM-DD.
+/// Asynchronous version.
+//let historicalPricesAsync stock startDate endDate =
+//    async {
+//    }
 
 /// Indexes
 
