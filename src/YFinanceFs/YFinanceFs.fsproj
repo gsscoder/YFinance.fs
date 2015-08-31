@@ -109,6 +109,7 @@
     <Compile Include="AssemblyInfo.fs" />
     <Compile Include="Finance.fs" />
     <None Include="YFinanceFs.fsx" />
+    <Compile Include="HistoricalQuote.fs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="mscorlib" />
