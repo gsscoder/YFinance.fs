@@ -106,11 +106,11 @@
     </When>
   </Choose>
   <ItemGroup>
-    <None Include="YFinanceFs.fsx" />
     <Compile Include="AssemblyInfo.fs" />
     <Compile Include="Data.fs" />
     <Compile Include="Interpolate.fs" />
     <Compile Include="Finance.fs" />
+    <None Include="YFinanceFs.fsx" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="mscorlib" />
