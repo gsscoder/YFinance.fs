@@ -6,44 +6,13 @@ open Chiron.Operators
 open Aether
 open Aether.Operators
 open HttpClient
+open Network.Yahoo.StockQuote
 
 module Option =
     let fromSingletonList xs =
         match xs with
         | [x] -> Some x
         | _ -> None
-
-type StockQuote =
-    {
-        name     : string
-      ; symbol   : string
-      ; price    : string
-      ; change   : string
-      ; dayHigh  : string
-      ; dayLow   : string
-      ; yearHigh : string
-      ; yearLow  : string
-    }
-    static member FromJson (_ : StockQuote) =
-            (fun n s p c d d' y y' -> 
-             {
-               name        = n
-               symbol      = s
-               price       = p
-               change      = c
-               dayHigh     = d
-               dayLow      = d'
-               yearHigh    = y
-               yearLow     = y'
-             })
-            <!> Json.read "Name"
-            <*> Json.read "Symbol"
-            <*> Json.read "LastTradePriceOnly"
-            <*> Json.read "Change"
-            <*> Json.read "DaysHigh"
-            <*> Json.read "DaysLow"
-            <*> Json.read "YearHigh"
-            <*> Json.read "YearLow"
 
 let parseResponse json =
     let (plens, _) =
