@@ -48,8 +48,9 @@ let runRequest yql =
         return body
     }
 
+let quoteString s = sprintf "\"%s\"" s
+
 let generateYQLQuery xs =
-    let quoteString s = sprintf "\"%s\"" s
     let addComma s1 s2 = sprintf "%s,%s" s1 s2
     let stocks = xs |> (List.map (quoteString) >> List.reduce (addComma))
     sprintf "select * from yahoo.finance.quote where symbol in (%s)" stocks
@@ -82,6 +83,18 @@ let getStockQuote symbol =
 /// Fetch stock quotes from Yahoo Finance eg. getStockQuotes ["MSFT"; "ORCL"].
 let getStockQuotes symbols =
     symbols |> getStockQuotesAsync |> Async.RunSynchronously
+
+/// Historical data
+
+/// Generates a query to retrieve all historical data for 1 or many stocks.
+/// Dates for YQL in format YYYY-MM-DD.
+let historicalYQLQuery stock startDate endDate =
+    let query =
+        [ "select * from yahoo.finance.historicaldata where "
+        ; "symbol=#{x} and startDate=#{y} and endDate=#{z}"
+        ] |> List.reduce (+)
+    in
+        interpolate query [("x", quoteString stock); ("y", quoteString startDate); ("z", quoteString endDate)]
 
 /// Indexes
 
