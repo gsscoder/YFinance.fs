@@ -108,8 +108,7 @@
   <ItemGroup>
     <None Include="YFinanceFs.fsx" />
     <Compile Include="AssemblyInfo.fs" />
-    <Compile Include="HistoricalQuote.fs" />
-    <Compile Include="StockQuote.fs" />
+    <Compile Include="Data.fs" />
     <Compile Include="Interpolate.fs" />
     <Compile Include="Finance.fs" />
   </ItemGroup>

@@ -6,7 +6,7 @@ open Chiron.Operators
 open Aether
 open Aether.Operators
 open HttpClient
-open Network.Yahoo.StockQuote
+open Network.Yahoo.Data
 
 module Option =
     let fromSingletonList xs =
