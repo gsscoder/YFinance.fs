@@ -9,6 +9,8 @@ open HttpClient
 open Network.Yahoo.Data
 open Network.Yahoo.Interpolate
 
+let toDouble s = Double.Parse(s)
+
 module Option =
     let fromSingletonList xs =
         match xs with
@@ -116,10 +118,21 @@ let historicalYQLQuery stock startDate endDate =
 /// Dates should be in the form YYYY-MM-DD.
 let historicalPrices stock startDate endDate =
     async {
-        let! response = generateYQLQuery [stock] |> runRequest
-        let xs = parseResponse response mapHistoricalQuote
-        return xs |> Option.fromSingletonList
+        let! response = historicalYQLQuery stock startDate endDate |> runRequest
+        let xs = parseResponseToHistoricalQuote response
+        return xs
     }
+
+/// Fetch historical price information for a stock.
+/// Asynchronous version.
+let historicalAsync symbol startDate endDate =
+    async {
+        return! historicalPrices symbol startDate endDate
+    }
+
+/// Fetch historical price information for a stock.
+let historical symbol startDate endDate =
+    historicalAsync symbol startDate endDate |> Async.RunSynchronously
 
 /// Indexes
 
