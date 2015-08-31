@@ -110,6 +110,7 @@
     <Compile Include="Finance.fs" />
     <None Include="YFinanceFs.fsx" />
     <Compile Include="HistoricalQuote.fs" />
+    <Compile Include="Interpolate.fs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="mscorlib" />
