@@ -7,6 +7,7 @@ open Aether
 open Aether.Operators
 open HttpClient
 open Network.Yahoo.Data
+open Network.Yahoo.Interpolate
 
 module Option =
     let fromSingletonList xs =
