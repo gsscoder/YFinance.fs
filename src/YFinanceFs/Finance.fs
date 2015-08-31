@@ -15,23 +15,37 @@ module Option =
         | [x] -> Some x
         | _ -> None
 
-let mapStockQuote = (Json.deserialize : _ -> StockQuote)
+let jsonLens =
+    idLens
+    <-?> Json.ObjectPIso
+    >??> mapPLens "query"
+    <??> Json.ObjectPIso
+    >??> mapPLens "results"
+    <??> Json.ObjectPIso
 
-let parseResponse json mapper =
-    let (plens, _) =
-        idLens
-        <-?> Json.ObjectPIso
-        >??> mapPLens "query"
-        <??> Json.ObjectPIso
-        >??> mapPLens "results"
-        <??> Json.ObjectPIso
+let parseResponseToStockQuote json =
+    let (plens, _) = jsonLens
     let node = plens (Json.parse json)
     match node with
     | Some values -> 
         let data = values |> Map.find "quote"
         match data with
         | Array quotes ->
-            quotes |> List.map mapper
+            quotes |> List.map (Json.deserialize : _ -> StockQuote)
+        | Object _ ->
+            [Json.deserialize data]
+        | _ -> []
+    | _ -> []
+
+let parseResponseToHistoricalQuote json =
+    let (plens, _) = jsonLens
+    let node = plens (Json.parse json)
+    match node with
+    | Some values -> 
+        let data = values |> Map.find "quote"
+        match data with
+        | Array quotes ->
+            quotes |> List.map (Json.deserialize : _ -> HistoricalQuote)
         | Object _ ->
             [Json.deserialize data]
         | _ -> []
@@ -62,7 +76,7 @@ let generateYQLQuery xs =
 let getStockQuoteAsync symbol =
     async {
         let! response = generateYQLQuery [symbol] |> runRequest
-        let xs = parseResponse response mapStockQuote
+        let xs = parseResponseToStockQuote response
         return xs |> Option.fromSingletonList
     }
 
@@ -74,7 +88,7 @@ let getStockQuotesAsync symbols =
         | [] -> return []
         | _ ->
             let! response = generateYQLQuery symbols |> runRequest
-            return parseResponse response mapStockQuote
+            return parseResponseToStockQuote response
     }
 
 /// Fetch a stock quote from Yahoo Finance eg. getStockQuote "GOOGL".
@@ -100,10 +114,12 @@ let historicalYQLQuery stock startDate endDate =
 
 /// Get historical prices for one or many stocks.
 /// Dates should be in the form YYYY-MM-DD.
-/// Asynchronous version.
-//let historicalPricesAsync stock startDate endDate =
-//    async {
-//    }
+let historicalPrices stock startDate endDate =
+    async {
+        let! response = generateYQLQuery [stock] |> runRequest
+        let xs = parseResponse response mapHistoricalQuote
+        return xs |> Option.fromSingletonList
+    }
 
 /// Indexes
 
