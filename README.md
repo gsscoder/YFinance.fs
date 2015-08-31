@@ -43,15 +43,14 @@ val it : StockQuote option = Some {name = "NASDAQ-100";
                                    yearLow = "3700.23";}
 >
 > historical "GOOGL" "2014-01-01" "2015-01-01";;
-val it : Network.Yahoo.Data.HistoricalQuote list =
-                                   [{symbol = "GOOGL";
-                                     date = "2014-12-31";
-								     opening = "537.73999";
-								     high = "538.400024";
-								     low = "530.200012";
-								     close = "530.659973";
-								     volume = "1232400";
-								     adjustedClose = "530.659973";}; ...
+val it : HistoricalQuote list = [{symbol = "GOOGL";
+                                  date = "2014-12-31";
+								  opening = "537.73999";
+								  high = "538.400024";
+								  low = "530.200012";
+								  close = "530.659973";
+								  volume = "1232400";
+								  adjustedClose = "530.659973";}; ...
 ```
 
 ## Acknowledgements
