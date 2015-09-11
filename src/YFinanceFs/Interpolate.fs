@@ -1,10 +1,10 @@
 module Network.Yahoo.Interpolate
 
-let toMarker value =
+let private toMarker value =
     sprintf "#{%s}" value
 
-let replace (str : string) (marker : string) (replacement : string) =
+let private replace (str : string) (marker : string) (replacement : string) =
     System.Text.RegularExpressions.Regex.Replace (str, marker, replacement)
 
-let interpolate input xs =
+let internal interpolate input xs =
     xs |> List.fold (fun s (a, b) -> replace s (toMarker a) b) input

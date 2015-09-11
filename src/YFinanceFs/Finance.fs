@@ -12,16 +12,16 @@ open Network.Yahoo.Interpolate
 let toDouble s = Double.Parse(s)
 
 module Option =
-    let fromSingletonList xs =
+    let internal fromSingletonList xs =
         match xs with
         | [x] -> Some x
         | _ -> None
 
-let stockQuoteMapper = (Json.deserialize : _ -> StockQuote)
+let private stockQuoteMapper = (Json.deserialize : _ -> StockQuote)
 
-let historicalQuoteMapper = (Json.deserialize : _ -> HistoricalQuote)
+let private historicalQuoteMapper = (Json.deserialize : _ -> HistoricalQuote)
 
-let inline parseResponse json (mapper : Json -> 'T) : 'T list =
+let inline private parseResponse json (mapper : Json -> 'T) : 'T list =
     let (plens, _) =
         idLens
         <-?> Json.ObjectPIso
@@ -41,7 +41,7 @@ let inline parseResponse json (mapper : Json -> 'T) : 'T list =
         | _ -> []
     | _ -> []
 
-let runRequest yql =
+let private runRequest yql =
     let request = 
         let yahoo = "https://query.yahooapis.com/v1/public/yql"
         let datatable = "store://datatables.org/alltableswithkeys"
@@ -54,9 +54,9 @@ let runRequest yql =
         return body
     }
 
-let quoteString s = sprintf "\"%s\"" s
+let private quoteString s = sprintf "\"%s\"" s
 
-let generateYQLQuery xs =
+let private generateYQLQuery xs =
     let addComma s1 s2 = sprintf "%s,%s" s1 s2
     let stocks = xs |> (List.map (quoteString) >> List.reduce (addComma))
     sprintf "select * from yahoo.finance.quote where symbol in (%s)" stocks
@@ -94,7 +94,7 @@ let getStockQuotes symbols =
 
 /// Generates a query to retrieve all historical data for 1 or many stocks.
 /// Dates for YQL in format YYYY-MM-DD.
-let historicalYQLQuery stock startDate endDate =
+let private historicalYQLQuery stock startDate endDate =
     let query =
         [ "select * from yahoo.finance.historicaldata where "
         ; "symbol=#{x} and startDate=#{y} and endDate=#{z}"
@@ -104,7 +104,7 @@ let historicalYQLQuery stock startDate endDate =
 
 /// Get historical prices for one or many stocks.
 /// Dates should be in the form YYYY-MM-DD.
-let historicalPrices stock startDate endDate =
+let private historicalPrices stock startDate endDate =
     async {
         let! response = historicalYQLQuery stock startDate endDate |> runRequest
         let xs = parseResponse response historicalQuoteMapper
