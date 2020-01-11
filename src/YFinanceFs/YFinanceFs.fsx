@@ -1,6 +1,0 @@
-﻿#r @"./bin/Debug/HttpClient.dll"
-#r @"./bin/Debug/FParsecCS.dll"
-#r @"./bin/Debug/FParsec.dll"
-#r @"./bin/Debug/Aether.dll"
-#r @"./bin/Debug/Chiron.dll"
-#r @"./bin/Debug/YFinanceFs.dll"
